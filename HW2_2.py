@@ -7,7 +7,8 @@ matplotlib.rcParams['figure.dpi'] = 300
 book_config = False
 
 V = [80, 60, 100, 20] # Vl, Vb, Vt, Vr
-xo = 1 
+#V = [80, 0, 0, 0] # Vl, Vb, Vt, Vr
+xo = 1
 yo = 1
 Nx = 64
 Ny = 64
@@ -57,7 +58,6 @@ def exact(x, y):
     # Exact solution is in the form of a series sum.
     # Exact solution is approximated by first non-zero Nmax/2 terms in sum.
     Nmax = 66
-    r = yo/xo
     pi = np.pi
     sinh = np.sinh
     sin = np.sin
@@ -66,12 +66,13 @@ def exact(x, y):
         for j in np.arange(1, x.shape[1] - 1):
             P = 0.
             for n in np.arange(1, Nmax+1, 2):
-                R = (4/pi)*(1/n)*(1/sinh(r*n*pi));
-                Pl = -V[0]*sin(n*pi*y[i, j])*sinh(r*n*pi*(x[i, j]-1)); 
-                Pb = -V[1]*sin(n*pi*x[i, j])*sinh(r*n*pi*(y[i, j]-1)); 
-                Pt =  V[2]*sin(n*pi*x[i, j])*sinh(r*n*pi*y[i, j]); 
-                Pr =  V[3]*sin(n*pi*y[i, j])*sinh(r*n*pi*x[i, j]); 
-                P = P + R*(Pl + Pr + Pt + Pb);
+                R1 = (4/pi)*(1/n)*(1/sinh(n*pi*yo/xo));
+                R2 = (4/pi)*(1/n)*(1/sinh(n*pi*xo/yo));
+                Pl =  V[0]*sin(n*pi*y[i, j]/yo)*sinh(n*pi*(xo-x[i, j])/yo); 
+                Pb =  V[1]*sin(n*pi*x[i, j]/xo)*sinh(n*pi*y[i, j]/xo); 
+                Pt =  V[2]*sin(n*pi*x[i, j]/xo)*sinh(n*pi*(yo-y[i, j])/xo); 
+                Pr =  V[3]*sin(n*pi*y[i, j]/yo)*sinh(n*pi*x[i, j]/yo); 
+                P = P + R1*Pl + R1*Pr + R2*Pt + R2*Pb;
             Phi_e[i,j] = P
     return Phi_e
 
@@ -87,8 +88,8 @@ def plot(x, y, Phi, title='', show_grid=False):
     ax.set_title(title)
     ax.set_aspect(1)
     # Choose number of colors as 8 so colors line up with tick increments on colorbar.
-    m = ax.pcolor(x, y, Phi, cmap=plt.get_cmap('viridis', 8))
-    m.set_clim(20, 100) # Set colorbar limits
+    m = ax.pcolor(x, y, Phi, cmap=plt.get_cmap('viridis', 9))
+    m.set_clim(15, 105) # Set colorbar limits
     cb = fig.colorbar(m)
     cb.ax.set_title('$\Phi$ [V]')
     ax.set_xlabel('x')
@@ -114,7 +115,7 @@ Phi[0,:]  = V[2] # Vt
 Phi[:,-1] = V[3] # Vr
 
 if book_config:
-    for s in range(6):
+    for s in range(5):
         Phi_new = step(Phi)
         log('Step {}'.format(s+1))
         log('Φ1\t{0:.2f}'.format(Phi_new[1,1]))
@@ -143,8 +144,9 @@ Phi = np.flipud(Phi)
 
 # Compute exact solution.
 Phi_e = exact(X, Y)
-# Transpose for plotting.
-Phi_e = Phi_e.T
+
+# Transpose and flip solution for plotting.
+Phi_e = np.flipud(Phi_e.T)
 
 # Compute mean-squared error of numerical solution relative to exact solution.
 mse = np.sqrt(np.mean((Phi[1:-1,1:-1].flatten() - Phi_e[1:-1,1:-1].flatten())**2))
@@ -176,7 +178,7 @@ if book_config:
     log('Φ3\t{0:.2f}'.format(Phi_e[1,1]))
     log('Φ4\t{0:.2f}'.format(Phi_e[1,2]))
     
-m, cb = plot(x, y, Phi, title='Numerical solution')
+m, cb = plot(x, y, Phi, title='Numerical solution', show_grid=show_grid)
 if book_config:
     plt.savefig('HW2_2.pdf', bbox_inches='tight')
 
@@ -185,7 +187,7 @@ plt.savefig('HW2_figures/HW2_2_{0:d}x{1:d}_Numerical.pdf'.format(Nx, Ny), bbox_i
 m, cb = plot(x, y, Phi, title='Series solution')
 plt.savefig('HW2_figures/HW2_2_{0:d}x{1:d}_Series.pdf'.format(Nx, Ny), bbox_inches='tight')
 
-m, cb = plot(x, y, Phi-Phi_e, title='(Numerical-Series); MSE = {0:.2f}'.format(mse))
+m, cb = plot(x, y, Phi-Phi_e, title='(Numerical-Series); MSE = {0:.2f} [V]'.format(mse))
 cb.ax.set_title('$\Delta\Phi$ [V]')
-m.set_clim(-2, 2) # Set colorbar limits
+m.set_clim(-2.25, 2.25) # Set colorbar limits
 plt.savefig('HW2_figures/HW2_2_{0:d}x{1:d}_Difference.pdf'.format(Nx, Ny), bbox_inches='tight')
