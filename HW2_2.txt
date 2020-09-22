@@ -438,3 +438,7 @@ Series solution
 261 steps for max abs change in values to be < 0.000010
 261 steps for max abs change in values to be < 0.000010
 243 steps for max abs change in values to be < 0.000010
+231 steps for max abs change in values to be < 0.000010
+231 steps for max abs change in values to be < 0.000010
+12 steps for max abs change in values to be < 0.000010
+2392 steps for max abs change in values to be < 0.000010

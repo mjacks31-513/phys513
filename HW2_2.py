@@ -8,10 +8,10 @@ book_config = False
 
 V = [80, 60, 100, 20] # Vl, Vb, Vt, Vr
 #V = [80, 0, 0, 0] # Vl, Vb, Vt, Vr
-xo = 2
+xo = 1
 yo = 1
-Nx = 16
-Ny = 16
+Nx = 64
+Ny = 64
 
 # Show grid points on plots
 show_grid = False
@@ -189,12 +189,12 @@ m, cb = plot(x, y, Phi, title='Numerical solution', show_grid=show_grid)
 if book_config:
     plt.savefig('HW2_2.pdf', bbox_inches='tight')
 
-plt.savefig('HW2_figures/HW2_2_{0:d}x{1:d}_Numerical.pdf'.format(Nx, Ny), bbox_inches='tight')
+plt.savefig('HW2_figures/HW2_2_{0:d}x{1:d}_r_{2:.1f}_Numerical.pdf'.format(Nx, Ny, yo/xo), bbox_inches='tight')
 
 m, cb = plot(x, y, Phi_e, title='Series solution')
-plt.savefig('HW2_figures/HW2_2_{0:d}x{1:d}_Series.pdf'.format(Nx, Ny), bbox_inches='tight')
+plt.savefig('HW2_figures/HW2_2_{0:d}x{1:d}_r_{2:.1f}_Series.pdf'.format(Nx, Ny, yo/xo), bbox_inches='tight')
 
 m, cb = plot(x, y, Phi-Phi_e, title='(Numerical-Series); MSE = {0:.2f} [V]'.format(mse))
 cb.ax.set_title('$\Delta\Phi$ [V]')
 m.set_clim(-2.25, 2.25) # Set colorbar limits
-plt.savefig('HW2_figures/HW2_2_{0:d}x{1:d}_Difference.pdf'.format(Nx, Ny), bbox_inches='tight')
+plt.savefig('HW2_figures/HW2_2_{0:d}x{1:d}_r_{2:.1f}_Difference.pdf'.format(Nx, Ny, yo/xo), bbox_inches='tight')
