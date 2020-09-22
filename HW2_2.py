@@ -8,10 +8,10 @@ book_config = False
 
 V = [80, 60, 100, 20] # Vl, Vb, Vt, Vr
 #V = [80, 0, 0, 0] # Vl, Vb, Vt, Vr
-xo = 1
+xo = 2
 yo = 1
-Nx = 64
-Ny = 64
+Nx = 16
+Ny = 16
 
 # Show grid points on plots
 show_grid = False
@@ -45,12 +45,15 @@ def nancorners(M):
     return M
 
 
-def step(Phi):
+def step(Phi, dx, dy):
     Phi = np.copy(Phi)
+    r2 = (dy/dx)**2
+    F = 1./(2.0*(1+r2))
     for i in range(1, Phi.shape[0] - 1):
         for j in range(1, Phi.shape[1] - 1):
-            Phi[i, j] = (1/4)*(Phi[i-1, j] + Phi[i+1, j] + Phi[i, j-1] + Phi[i, j+1])
-        
+            Phi[i, j] = Phi[i-1, j] + Phi[i+1, j] + r2*(Phi[i, j-1] + Phi[i, j+1])
+            Phi[i, j] = F*Phi[i, j]
+            #Phi[i, j] = (1/4)*(Phi[i-1, j] + Phi[i+1, j] + Phi[i, j-1] + Phi[i, j+1])            
     return Phi
 
 
@@ -66,13 +69,14 @@ def exact(x, y):
         for j in np.arange(1, x.shape[1] - 1):
             P = 0.
             for n in np.arange(1, Nmax+1, 2):
-                R1 = (4/pi)*(1/n)*(1/sinh(n*pi*yo/xo));
-                R2 = (4/pi)*(1/n)*(1/sinh(n*pi*xo/yo));
+                R1 = (4./pi)*(1/n)*(1./sinh(n*pi*xo/yo));
+                R2 = (4./pi)*(1/n)*(1./sinh(n*pi*yo/xo));
                 Pl =  V[0]*sin(n*pi*y[i, j]/yo)*sinh(n*pi*(xo-x[i, j])/yo); 
                 Pb =  V[1]*sin(n*pi*x[i, j]/xo)*sinh(n*pi*y[i, j]/xo); 
                 Pt =  V[2]*sin(n*pi*x[i, j]/xo)*sinh(n*pi*(yo-y[i, j])/xo); 
                 Pr =  V[3]*sin(n*pi*y[i, j]/yo)*sinh(n*pi*x[i, j]/yo); 
                 P = P + R1*Pl + R1*Pr + R2*Pt + R2*Pb;
+                #P = P + R1*Pl;
             Phi_e[i,j] = P
     return Phi_e
 
@@ -103,6 +107,9 @@ y = np.arange(0, Ny) # [0, 1, ..., Ny-1]
 x = xo*x/(Nx-1) # x = [0, xo/(Nx-1), ..., xo]
 y = yo*y/(Nx-1) # y = [0, yo/(Ny-1), ..., yo]
 
+dx = x[1] - x[0]
+dy = y[1] - y[0]
+
 X, Y = np.meshgrid(x, y, indexing='ij')
 
 # Set all values to average of boundary values
@@ -116,7 +123,7 @@ Phi[:,-1] = V[3] # Vr
 
 if book_config:
     for s in range(5):
-        Phi_new = step(Phi)
+        Phi_new = step(Phi, dx, dy)
         log('Step {}'.format(s+1))
         log('Φ1\t{0:.2f}'.format(Phi_new[1,1]))
         log('Φ2\t{0:.2f}'.format(Phi_new[1,2]))
@@ -131,7 +138,7 @@ else:
     # s  is step number
     s = 1 
     while d >= local_tol:
-        Phi_new = step(Phi)
+        Phi_new = step(Phi, dx, dy)
         d = np.max(np.abs(Phi.flatten()-Phi_new.flatten()))
         if d < local_tol:
             break
@@ -184,7 +191,7 @@ if book_config:
 
 plt.savefig('HW2_figures/HW2_2_{0:d}x{1:d}_Numerical.pdf'.format(Nx, Ny), bbox_inches='tight')
 
-m, cb = plot(x, y, Phi, title='Series solution')
+m, cb = plot(x, y, Phi_e, title='Series solution')
 plt.savefig('HW2_figures/HW2_2_{0:d}x{1:d}_Series.pdf'.format(Nx, Ny), bbox_inches='tight')
 
 m, cb = plot(x, y, Phi-Phi_e, title='(Numerical-Series); MSE = {0:.2f} [V]'.format(mse))

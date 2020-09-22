@@ -410,3 +410,31 @@ Series solution
 Φ3	67.61
 Φ4	51.93
 2392 steps for max abs change in values to be < 0.000010
+231 steps for max abs change in values to be < 0.000010
+226 steps for max abs change in values to be < 0.000010
+226 steps for max abs change in values to be < 0.000010
+226 steps for max abs change in values to be < 0.000010
+226 steps for max abs change in values to be < 0.000010
+226 steps for max abs change in values to be < 0.000010
+226 steps for max abs change in values to be < 0.000010
+226 steps for max abs change in values to be < 0.000010
+226 steps for max abs change in values to be < 0.000010
+226 steps for max abs change in values to be < 0.000010
+226 steps for max abs change in values to be < 0.000010
+226 steps for max abs change in values to be < 0.000010
+226 steps for max abs change in values to be < 0.000010
+226 steps for max abs change in values to be < 0.000010
+226 steps for max abs change in values to be < 0.000010
+226 steps for max abs change in values to be < 0.000010
+248 steps for max abs change in values to be < 0.000010
+226 steps for max abs change in values to be < 0.000010
+248 steps for max abs change in values to be < 0.000010
+248 steps for max abs change in values to be < 0.000010
+248 steps for max abs change in values to be < 0.000010
+248 steps for max abs change in values to be < 0.000010
+248 steps for max abs change in values to be < 0.000010
+248 steps for max abs change in values to be < 0.000010
+248 steps for max abs change in values to be < 0.000010
+261 steps for max abs change in values to be < 0.000010
+261 steps for max abs change in values to be < 0.000010
+243 steps for max abs change in values to be < 0.000010
