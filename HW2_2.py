@@ -23,7 +23,6 @@ if book_config:
     Nx = 4
     Ny = 4
     show_grid = True
-
 # Stop numerical soln when change at all grid points from one step to next
 # is small than local_tol.
 local_tol = 0.00001 

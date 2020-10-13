@@ -1,0 +1,13 @@
+My code is located at https://github.com/rweigel/phys513
+
+I looked up the analytic answer for the off-axis magnetic field of a circular current loop [http://www.netdenizen.com/emagnet/offaxis/iloopoffaxis.htm]. The off-axis field requires an integration of an elliptic integral.
+
+An easy way of computing the flux is to find $B_z(s_i,0,z) at \(z=2\) and \(s=0.1, 0.2, ..., 1\). The flux through an annulus of inner radius \(s_i\) and outer radius \(s_{i+1}\) is approximately
+
+$$\Phi_M^i = \pi (s_{i+1}^2-s_{i}^2) B_z(s_i)$$
+
+or, using the field at the center radius
+
+$$\Phi_M^i = \pi (s_{i+1}^2-s_{i}^2) (B_z(s_{i+1})+B_z(s_{i})/2$$
+
+As the number of annuli increases, the flux should approach the exact answer. This is how one would compute the flux using ordinary integration.
